@@ -189,7 +189,7 @@ public class API {
     }
 
     protected String createApiUrl(List<String> parts){
-        createApiUrl(parts, null);
+        return createApiUrl(parts, null);
     }
     protected String createApiUrl(List<String> parts, Map<String, String> query){
         ArrayList<String> path = new ArrayList<>();
@@ -250,6 +250,8 @@ public class API {
         if(method.equalsIgnoreCase("post")){
             return new HttpPost(url);
         }
+
+        return null;
     }
 
     public FileToken uploadFile(String file) throws IOException {
