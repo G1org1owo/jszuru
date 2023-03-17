@@ -2,13 +2,11 @@ package jszuru;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
+import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.*;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -225,19 +223,18 @@ public class API {
         try(CloseableHttpClient httpClient = HttpClients.createDefault()){
             HttpRequest httpRequest = createHttpRequest(method, createApiUrl(urlParts));
             apiHeaders.forEach(httpRequest::setHeader);
+            httpRequest.setHeader("Content", "application/json");
+
+            if(body!=null && httpRequest instanceof HttpEntityEnclosingRequest sendRequest){
+                sendRequest.setEntity(new StringEntity(gson.toJson(body)));
+            }
+
+            HttpResponse response = httpClient.execute((HttpUriRequest) httpRequest);
+
+            checkApiResponse(response);
+            String content = new String(response.getEntity().getContent().readAllBytes());
+            return gson.fromJson(content, new TypeToken<Map<String, Object>>(){}.getType());
         }
-        /*HttpURLConnection conn = (HttpURLConnection) new URL(createApiUrl(urlParts, urlQuery)).openConnection();
-        conn.setRequestMethod(method);
-        apiHeaders.forEach(conn::setRequestProperty);
-
-        conn.setDoOutput(true);
-        conn.getOutputStream().write(gson.toJson(body).getBytes());
-
-        int responseCode = conn.getResponseCode();
-        String response = conn.getInputStream().readAllBytes().toString();*/
-
-        checkApiResponse(responseCode, response);
-        return gson.fromJson(response, new TypeToken<Map<String, Object>>(){}.getType());
     }
 
     protected HttpRequest createHttpRequest(String method, String url) {
