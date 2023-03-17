@@ -1,6 +1,7 @@
 package jszuru;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.apache.http.*;
 import org.apache.http.client.methods.*;
@@ -10,8 +11,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -25,7 +25,6 @@ public class SzurubooruAPI {
     private String apiPathPrefix = "/api";
     private HashMap<String, String> apiHeaders = null;
     private String username = null;
-
 
     public static class APIBuilder{
         private String baseUrl;
@@ -68,21 +67,6 @@ public class SzurubooruAPI {
         String fullAuth = user + ":" + password;
         return Base64.getEncoder().encodeToString(fullAuth.getBytes());
     }
-
-    /*protected static void checkApiResponse(int responseCode, String response) throws SzurubooruHTTPException{
-        if(responseCode != 200){
-            Gson gson = new Gson();
-            Map<String, Object> responseMap = gson.fromJson(response, new TypeToken<Map<String, Object>>(){}.getType());
-            String errorName = responseMap.get("name") + "";
-            String errorDescription = responseMap.get("description") + "";
-
-            if(errorName == null || errorDescription == null){
-                throw new SzurubooruHTTPException(response);
-            }
-
-            throw new SzurubooruHTTPException(errorName + ": " + errorDescription);
-        }
-    }*/
     protected static void checkApiResponse(HttpResponse response) throws SzurubooruHTTPException, IOException {
         if(response.getStatusLine().getStatusCode() != 200/*HTTP OK*/){
             Gson gson = new Gson();
@@ -99,6 +83,7 @@ public class SzurubooruAPI {
             throw new SzurubooruHTTPException(errorName + ": " + errorDescription);
         }
     }
+
     public SzurubooruAPI(String baseUrl, String username, String password, String token, String apiUri) throws MalformedURLException, URISyntaxException {
         URL parsedBaseUrl = new URL(baseUrl);
 
@@ -239,23 +224,6 @@ public class SzurubooruAPI {
         }
     }
 
-    protected HttpRequest createHttpRequest(String method, String url) {
-        if(method.equalsIgnoreCase("get")){
-            return new HttpGet(url);
-        }
-        if(method.equalsIgnoreCase("put")){
-            return new HttpPut(url);
-        }
-        if(method.equalsIgnoreCase("delete")){
-            return new HttpDelete(url);
-        }
-        if(method.equalsIgnoreCase("post")){
-            return new HttpPost(url);
-        }
-
-        return null;
-    }
-
     public FileToken uploadFile(String file) throws IOException {
         return uploadFile(new File(file));
     }
@@ -283,12 +251,55 @@ public class SzurubooruAPI {
         }
     }
 
+    protected String createDataUrl(String relativeUrl) throws MalformedURLException {
+        return createDataUrl(relativeUrl, true);
+    }
+    protected String createDataUrl(String relativeUrl, boolean ovverideBase) throws MalformedURLException {
+        if(ovverideBase){
+            String basePath = "/" + this.urlPathPrefix;
+            String relativePath = new URL(relativeUrl).getPath();
+
+            return this.urlScheme + "/" + this.urlNetLocation + "/" + basePath + relativePath;
+        }
+
+        return this.urlScheme + "/" + this.urlNetLocation + "/" + this.urlPathPrefix + "/" + relativeUrl;
+    }
+
+    public void saveToConfig(String filename) throws IOException {
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
+
+        gson.toJson(this, new FileWriter(filename));
+    }
+    public static SzurubooruAPI loadFromConfig(String filename) throws FileNotFoundException {
+        Gson gson = new Gson();
+
+        return gson.fromJson(new FileReader(filename), SzurubooruAPI.class);
+    }
+
     public static String stripTrailing(String str, String trailing){
         if(str.equals(trailing)) return "";
         if(str.endsWith(trailing)){
             return str.substring(0, str.length()-trailing.length()-1);
         }
         return str;
+    }
+    protected HttpRequest createHttpRequest(String method, String url) {
+        if(method.equalsIgnoreCase("get")){
+            return new HttpGet(url);
+        }
+        if(method.equalsIgnoreCase("put")){
+            return new HttpPut(url);
+        }
+        if(method.equalsIgnoreCase("delete")){
+            return new HttpDelete(url);
+        }
+        if(method.equalsIgnoreCase("post")){
+            return new HttpPost(url);
+        }
+
+        return null;
     }
 
     public String toString(){
