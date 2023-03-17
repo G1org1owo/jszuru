@@ -84,14 +84,14 @@ public class API {
             throw new SzurubooruHTTPException(errorName + ": " + errorDescription);
         }
     }*/
-    protected static void checkApiResponse(HttpResponse response) throws SzurubooruHTTPException{
+    protected static void checkApiResponse(HttpResponse response) throws SzurubooruHTTPException, IOException {
         if(response.getStatusLine().getStatusCode() != 200/*HTTP OK*/){
             Gson gson = new Gson();
             String content = response.getEntity().getContent().readAllBytes().toString();
             Map<String, Object> responseMap = gson.fromJson(content, new TypeToken<Map<String, Object>>(){}.getType());
 
-            String errorName = responseMap.get("name") + "";
-            String errorDescription = responseMap.get("description") + "";
+            Object errorName = responseMap.get("name");
+            Object errorDescription = responseMap.get("description");
 
             if(errorName == null || errorDescription == null){
                 throw new SzurubooruHTTPException(content);
