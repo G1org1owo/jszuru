@@ -3,7 +3,6 @@ package jszuru;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.apache.http.*;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.*;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -17,7 +16,7 @@ import java.net.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
-public class API {
+public class SzurubooruAPI {
     private String urlScheme;
     private String urlNetLocation;
     private String urlPathPrefix = null;
@@ -35,7 +34,7 @@ public class API {
         private String token = null;
         private String apiUri = null;
 
-        APIBuilder(){}
+        public APIBuilder(){}
 
         public APIBuilder setApiUri(String apiUri) {
             this.apiUri = apiUri;
@@ -58,8 +57,8 @@ public class API {
             return this;
         }
 
-        public API build() throws MalformedURLException, URISyntaxException{
-            return new API(baseUrl, username, password, token, apiUri);
+        public SzurubooruAPI build() throws MalformedURLException, URISyntaxException{
+            return new SzurubooruAPI(baseUrl, username, password, token, apiUri);
         }
     }
 
@@ -100,7 +99,7 @@ public class API {
             throw new SzurubooruHTTPException(errorName + ": " + errorDescription);
         }
     }
-    public API(String baseUrl, String username, String password, String token, String apiUri) throws MalformedURLException, URISyntaxException {
+    public SzurubooruAPI(String baseUrl, String username, String password, String token, String apiUri) throws MalformedURLException, URISyntaxException {
         URL parsedBaseUrl = new URL(baseUrl);
 
         // Extract Base URL parts
@@ -136,10 +135,13 @@ public class API {
         apiHeaders = new HashMap<String, String>();
         apiHeaders.put("Accept", "application/json");
 
+        String apiUserInfo = parsedApiUri.getUserInfo();
+        String baseUserInfo = parsedBaseUrl.getUserInfo();
+
         String[] usernames = {
                 username,
-                parsedApiUri.getUserInfo().split(":")[0],
-                parsedBaseUrl.getUserInfo().split(":")[0],
+                apiUserInfo != null? apiUserInfo.split(":")[0] : null,
+                baseUserInfo != null? baseUserInfo.split(":")[0] : null
         };
 
         for(String usr:usernames){
@@ -163,8 +165,8 @@ public class API {
 
         String[] passwords = {
                 password,
-                parsedApiUri.getUserInfo().split(":")[1],
-                parsedBaseUrl.getUserInfo().split(":")[1],
+                apiUserInfo != null? apiUserInfo.split(":")[1] : null,
+                baseUserInfo != null? baseUserInfo.split(":")[1] : null
         };
 
         for(String pwd:passwords){
