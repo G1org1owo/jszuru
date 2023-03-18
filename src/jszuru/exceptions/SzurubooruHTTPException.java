@@ -1,6 +1,6 @@
 package jszuru.exceptions;
 
-public class SzurubooruHTTPException extends Throwable {
+public class SzurubooruHTTPException extends SzurubooruException {
     public SzurubooruHTTPException(String msg) {
         super(msg);
     }
