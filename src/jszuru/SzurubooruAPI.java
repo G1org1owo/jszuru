@@ -3,13 +3,17 @@ package jszuru;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import jszuru.exceptions.SzurubooruHTTPException;
+import jszuru.exceptions.SzurubooruResourceNotSynchronizedException;
 import org.apache.http.*;
 import org.apache.http.client.methods.*;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.io.*;
 import java.net.*;
@@ -31,7 +35,7 @@ public class SzurubooruAPI {
         private String username = null;
         private String password = null;
         private String token = null;
-        private String apiUri = null;
+        private String apiUri = "/api";
 
         public APIBuilder(){}
 
@@ -70,7 +74,7 @@ public class SzurubooruAPI {
     protected static void checkApiResponse(HttpResponse response) throws SzurubooruHTTPException, IOException {
         if(response.getStatusLine().getStatusCode() != 200/*HTTP OK*/){
             Gson gson = new Gson();
-            String content = response.getEntity().getContent().readAllBytes().toString();
+            String content = new String(response.getEntity().getContent().readAllBytes());
             Map<String, Object> responseMap = gson.fromJson(content, new TypeToken<Map<String, Object>>(){}.getType());
 
             Object errorName = responseMap.get("name");
@@ -96,9 +100,10 @@ public class SzurubooruAPI {
         }
 
         urlPathPrefix = stripTrailing(parsedBaseUrl.getPath(), "/");
+        if(!urlPathPrefix.startsWith("/")) urlPathPrefix = "/" + urlPathPrefix;
 
         // Extract API URI parts
-        URI parsedApiUri = new URI(apiUri != null? apiUri : "");
+        URI parsedApiUri = new URI(apiUri);
         apiScheme = parsedApiUri.getScheme();
         if(apiScheme == null) apiScheme = urlScheme;
 
@@ -144,7 +149,7 @@ public class SzurubooruAPI {
                 throw new IllegalArgumentException("Malformed token string");
             }
 
-            apiHeaders.put("Authorization", encodeAuthHeaders(this.username, token));
+            apiHeaders.put("Authorization", "Token " + encodeAuthHeaders(this.username, token));
             return;
         }
 
@@ -166,7 +171,7 @@ public class SzurubooruAPI {
                 throw new IllegalArgumentException("Password authentication specified without username");
             }
 
-            apiHeaders.put("Authorization", encodeAuthHeaders(this.username, password));
+            apiHeaders.put("Authorization", "Basic " + encodeAuthHeaders(this.username, password));
             return;
         }
 
@@ -183,10 +188,15 @@ public class SzurubooruAPI {
         path.add(apiPathPrefix);
         path.addAll(parts);
 
-        String url = apiScheme + "//" + apiNetLocation + "/" + String.join("/", path);
+        String url = apiScheme + "://" + apiNetLocation + String.join("/", path);
         if(query == null || query.isEmpty()) return url;
 
-        boolean first = true;
+        return url + "?" + URLEncodedUtils.format(query.entrySet()
+                .stream()
+                .map((x) -> new BasicNameValuePair(x.getKey(), x.getValue()))
+                .toList(), "UTF-8");
+
+        /*boolean first = true;
 
         for(String key:query.keySet()){
             if(first){
@@ -198,9 +208,12 @@ public class SzurubooruAPI {
             url += key + ":" + query.get(key);
         }
 
-        return url;
+        return url;*/
     }
 
+    protected Map<String, Object> call(String method, List<String> urlParts) throws IOException, SzurubooruHTTPException {
+        return call(method, urlParts, null, null);
+    }
     protected Map<String, Object> call(String method,
                                        List<String> urlParts,
                                        Map<String, String> urlQuery,
@@ -251,18 +264,18 @@ public class SzurubooruAPI {
         }
     }
 
-    protected String createDataUrl(String relativeUrl) throws MalformedURLException {
+    protected String createDataUrl(String relativeUrl) throws URISyntaxException, MalformedURLException {
         return createDataUrl(relativeUrl, true);
     }
-    protected String createDataUrl(String relativeUrl, boolean ovverideBase) throws MalformedURLException {
+    protected String createDataUrl(String relativeUrl, boolean ovverideBase) throws URISyntaxException, MalformedURLException {
         if(ovverideBase){
-            String basePath = "/" + this.urlPathPrefix;
-            String relativePath = new URL(relativeUrl).getPath();
+            String basePath = new File("/", urlPathPrefix).toString();
+            String relativePath = new URI(relativeUrl).getPath();
 
-            return this.urlScheme + "/" + this.urlNetLocation + "/" + basePath + relativePath;
+            return urlScheme + "://" + urlNetLocation + new File(basePath, relativePath);
         }
 
-        return this.urlScheme + "/" + this.urlNetLocation + "/" + this.urlPathPrefix + "/" + relativeUrl;
+        return new URL(new URL(urlScheme + "://" + urlNetLocation + urlPathPrefix), relativeUrl).toString();
     }
 
     public void saveToConfig(String filename) throws IOException {
@@ -278,7 +291,8 @@ public class SzurubooruAPI {
         return gson.fromJson(new FileReader(filename), SzurubooruAPI.class);
     }
 
-    public static String stripTrailing(String str, String trailing){
+
+    protected static String stripTrailing(String str, String trailing){
         if(str.equals(trailing)) return "";
         if(str.endsWith(trailing)){
             return str.substring(0, str.length()-trailing.length()-1);
