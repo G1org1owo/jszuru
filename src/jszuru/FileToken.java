@@ -1,8 +1,8 @@
 package jszuru;
 
 public class FileToken {
-    protected String token;
-    protected String filepath;
+    private String token;
+    private String filepath;
 
     FileToken(String token, String filepath){
         this.token = token;
