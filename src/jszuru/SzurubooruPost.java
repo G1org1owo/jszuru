@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+@SuppressWarnings("unused")
 public class SzurubooruPost extends SzurubooruResource {
     public SzurubooruPost(SzurubooruAPI api, Map<String, Object> initialJson){
         super(api, initialJson);
@@ -290,7 +291,7 @@ public class SzurubooruPost extends SzurubooruResource {
             if(value && !flagList.contains(flagName)){
                 flagList.add(flagName);
             }
-            else if(!value && flagList.contains(flagName)){
+            else if(!value){
                 flagList.remove(flagName);
             }
 
@@ -306,7 +307,7 @@ public class SzurubooruPost extends SzurubooruResource {
         return this.flagGetter("loop");
     }
     public SzurubooruPost loop(boolean value){
-        this.flagSetter("loop", value);
+        if(this.flagSetter("loop", value)) return null;
         return this;
     }
 
@@ -320,7 +321,7 @@ public class SzurubooruPost extends SzurubooruResource {
     }
     public SzurubooruPost setNotes(List<SzurubooruPostNote> notes){
         try{
-            this.genericSetter("notes", notes.stream().map(x -> x.json()).toList());
+            this.genericSetter("notes", notes.stream().map(SzurubooruPostNote::json).toList());
         } catch (IOException | SzurubooruException e) {
             e.printStackTrace();
         }
@@ -332,7 +333,7 @@ public class SzurubooruPost extends SzurubooruResource {
         return this.flagGetter("sound");
     }
     public SzurubooruPost sound(boolean value){
-        this.flagSetter("sound", value);
+        if(this.flagSetter("sound", value)) return null;
         return this;
     }
 

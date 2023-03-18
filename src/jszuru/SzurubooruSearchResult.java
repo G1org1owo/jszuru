@@ -1,5 +1,6 @@
 package jszuru;
 
+@SuppressWarnings("unused")
 public class SzurubooruSearchResult {
     protected SzurubooruPost post;
     protected float distance;

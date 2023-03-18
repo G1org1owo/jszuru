@@ -4,9 +4,11 @@ import jszuru.exceptions.SzurubooruHTTPException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 public class SzurubooruSearch {
     public static SzurubooruResource[] searchGeneric(SzurubooruAPI api,
                                                      String searchQuery,
@@ -20,12 +22,12 @@ public class SzurubooruSearch {
                                                      int pageSize,
                                                      boolean eagerLoad) throws IOException, SzurubooruHTTPException {
         int offset = 0;
-        int total = 0;
+        int total = Integer.MAX_VALUE;
 
         List<SzurubooruResource> results = new ArrayList<>();
 
-        while(true){
-            Map<String, String> urlQuery = Map.of("offset", offset + "", "limit", pageSize + "", "query", searchQuery);
+        while(offset < total){
+            Map<String, String> urlQuery = new HashMap<>(Map.of("offset", offset + "", "limit", pageSize + "", "query", searchQuery));
 
             if(!eagerLoad){
                 urlQuery.put("fields", String.join(",", transformingClass.lazyLoadComponents()));
@@ -39,8 +41,6 @@ public class SzurubooruSearch {
             }
 
             results.addAll((List<? extends SzurubooruResource>)page.get("results"));
-
-            if(offset >= total) break;
         }
 
         return results.toArray(new SzurubooruResource[0]);

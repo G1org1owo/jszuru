@@ -8,14 +8,13 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
 
+@SuppressWarnings("unused")
 public class SzurubooruTag extends SzurubooruResource{
-
-    private List<String> names;
-
     @Override
     protected List<String> getInstanceUrlParts() {
-        ArrayList<String> urlParts = new ArrayList<>();
+        List<String> urlParts = new ArrayList<>();
         urlParts.add("tag");
+
         if(json.get("names") instanceof String[] names) urlParts.add(names[0]);
         if(json.get("names") instanceof List<?> names) urlParts.add(String.valueOf(names.get(0)));
 
@@ -70,8 +69,7 @@ public class SzurubooruTag extends SzurubooruResource{
 
     @Override
     protected Map<String, Object> serialized() {
-        ArrayList<String> params = new ArrayList<>(Arrays.asList("names", "category", "description", "implications", "suggestions"));
-        Map<String, Object> ret = this.copyNewJson(params);
+        Map<String, Object> ret = this.copyNewJson(List.of("names", "category", "description", "implications", "suggestions"));
 
         if(ret.containsKey("implications")){
             List<Map<String, Object>> implications = (List<Map<String, Object>>) ret.get("implications");
@@ -120,7 +118,7 @@ public class SzurubooruTag extends SzurubooruResource{
 
     public List<String> getNames() {
         try{
-            return (List<String>) this.genericGetter("names");
+            return new ArrayList<>((List<String>) this.genericGetter("names"));
         } catch(IOException | SzurubooruException e){
             e.printStackTrace();
             return null;
@@ -156,7 +154,7 @@ public class SzurubooruTag extends SzurubooruResource{
 
     public List<SzurubooruTag> getImplications() {
         try{
-            return (List<SzurubooruTag>) this.genericGetter("implications");
+            return new ArrayList<>((List<SzurubooruTag>) this.genericGetter("implications"));
         } catch(IOException | SzurubooruException e){
             e.printStackTrace();
             return null;
@@ -174,7 +172,7 @@ public class SzurubooruTag extends SzurubooruResource{
 
     public List<SzurubooruTag> getSuggestions() {
         try{
-            return (List<SzurubooruTag>) this.genericGetter("suggestions");
+            return new ArrayList<>((List<SzurubooruTag>) this.genericGetter("suggestions"));
         } catch(IOException | SzurubooruException e){
             e.printStackTrace();
             return null;
@@ -213,13 +211,11 @@ public class SzurubooruTag extends SzurubooruResource{
     }
     public SzurubooruTag setPrimaryName(String primaryName) {
         List<String> existingNames = this.getNames();
-        if(existingNames.contains(primaryName)){
-            existingNames.remove(primaryName);
-        }
-        existingNames.add(0, primaryName);
-        this.setNames(existingNames);
 
-        return this;
+        existingNames.remove(primaryName);
+        existingNames.add(0, primaryName);
+
+        return this.setNames(existingNames);
     }
 
     public String toString(){

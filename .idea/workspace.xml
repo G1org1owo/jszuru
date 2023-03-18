@@ -4,10 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1d488a8b-46e5-4de8-9bff-a2705609cbf4" name="Changes" comment="Fixed builder and NullPointerException in API constructor">
+    <list default="true" id="1d488a8b-46e5-4de8-9bff-a2705609cbf4" name="Changes" comment="Added separate method to get primary name from json list">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/jszuru/SzurubooruAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jszuru/SzurubooruAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jszuru/SzurubooruPost.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jszuru/SzurubooruPost.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jszuru/SzurubooruPostNote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jszuru/SzurubooruPostNote.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jszuru/SzurubooruResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jszuru/SzurubooruResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jszuru/SzurubooruSearch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jszuru/SzurubooruSearch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jszuru/SzurubooruSearchResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jszuru/SzurubooruSearchResult.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jszuru/SzurubooruTag.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/jszuru/SzurubooruTag.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,34 +39,38 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Downloaded.Files.Path.Enabled": "false",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "true",
-    "Repository.Attach.Sources": "false",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/giorg/Documents/CoseProgrammazione/Java/jszuru",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "project.structure.last.edited": "Libraries",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "project.propVCSSupport.ChangelistConflict",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;true&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/giorg/Documents/CoseProgrammazione/Java/jszuru&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.ChangelistConflict&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="jszuru" />
+      <recent name="jszuru.exceptions" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\giorg\Documents\CoseProgrammazione\Java" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="jszuru.exceptions" />
     </key>
   </component>
   <component name="RunManager">
@@ -89,7 +99,9 @@
       <option name="presentableId" value="Default" />
       <updated>1678979254309</updated>
       <workItem from="1678979255406" duration="20577000" />
-      <workItem from="1679060989787" duration="3007000" />
+      <workItem from="1679060989787" duration="3437000" />
+      <workItem from="1679064836696" duration="16875000" />
+      <workItem from="1679140895617" duration="31813000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1679009265188</created>
@@ -140,7 +152,112 @@
       <option name="project" value="LOCAL" />
       <updated>1679063229395</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Added createDataUrl() + serialization and deserialization">
+      <created>1679064403763</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1679064403763</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Added class SzurubooruResource">
+      <created>1679142003087</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1679142003087</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Added jszuru.exceptions">
+      <created>1679142042126</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1679142042126</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Fixed several bugs regarding the API URL">
+      <created>1679163361820</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1679163361820</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Added parent exception SzurubooruException()">
+      <created>1679163524991</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1679163524991</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Fixed return -&gt; continue in updateJson()">
+      <created>1679163700257</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1679163700257</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Created class SzurubooruTag">
+      <created>1679163728156</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1679163728156</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Changed visibility of FileToken attributes">
+      <created>1679163752040</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1679163752040</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Changed access modifier of FileToken attributes">
+      <created>1679163809020</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1679163809020</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Created static class SzurubooruSearch to allow use of method genericSearch()">
+      <created>1679164167569</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1679164167569</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Added class SzurubooruPost">
+      <created>1679178999264</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1679178999264</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Added class SzurubooruPostNote">
+      <created>1679179010023</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1679179010023</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Added class SzurubooruSearchResult">
+      <created>1679179025702</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1679179025702</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Added image search + post API methods">
+      <created>1679179133627</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1679179133627</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Added separate method to get primary name from json list">
+      <created>1679179260790</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1679179260790</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -175,17 +292,35 @@
     <MESSAGE value="Fixed checkApiResponse()" />
     <MESSAGE value="Fixed missing return statements in createHttpRequest() and createApiUrl()" />
     <MESSAGE value="Fixed builder and NullPointerException in API constructor" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed builder and NullPointerException in API constructor" />
+    <MESSAGE value="Added createDataUrl() + serialization and deserialization" />
+    <MESSAGE value="Added class SzurubooruResource" />
+    <MESSAGE value="Added jszuru.exceptions" />
+    <MESSAGE value="Fixed several bugs regarding the API URL" />
+    <MESSAGE value="Added parent exception SzurubooruException()" />
+    <MESSAGE value="Fixed return -&gt; continue in updateJson()" />
+    <MESSAGE value="Created class SzurubooruTag" />
+    <MESSAGE value="Changed visibility of FileToken attributes" />
+    <MESSAGE value="Changed access modifier of FileToken attributes" />
+    <MESSAGE value="Created static class SzurubooruSearch to allow use of method genericSearch()" />
+    <MESSAGE value="Added class SzurubooruPost" />
+    <MESSAGE value="Added class SzurubooruPostNote" />
+    <MESSAGE value="Added class SzurubooruSearchResult" />
+    <MESSAGE value="Added image search + post API methods" />
+    <MESSAGE value="Added separate method to get primary name from json list" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added separate method to get primary name from json list" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Main.java</url>
-          <line>7</line>
-          <option name="timeStamp" value="1" />
+          <url>file://$PROJECT_DIR$/src/jszuru/SzurubooruAPI.java</url>
+          <line>334</line>
+          <option name="timeStamp" value="25" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/jszuru$Main.ic" NAME="Main Coverage Results" MODIFIED="1679153268031" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

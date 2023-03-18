@@ -77,7 +77,7 @@ public abstract class SzurubooruResource {
             data = api.call("PUT", this.getInstanceUrlParts(), null, body);
         }
         else{
-            data = api.call("POST", getInstanceUrlParts(), null, body);
+            data = api.call("POST", getClassUrlParts(), null, body);
         }
 
         this.updateJson(data, true);

@@ -3,11 +3,13 @@ package jszuru;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 public class SzurubooruPostNote {
     protected List<Point> points;
     protected String text;
 
-    protected class Point{
+    @SuppressWarnings("unused")
+    protected static class Point{
         protected float x;
         protected float y;
 

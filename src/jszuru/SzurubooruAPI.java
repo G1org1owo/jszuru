@@ -20,14 +20,15 @@ import java.net.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("unused")
 public class SzurubooruAPI {
-    private String urlScheme;
-    private String urlNetLocation;
-    private String urlPathPrefix = null;
-    private String apiScheme = null;
-    private String apiNetLocation = null;
-    private String apiPathPrefix = "/api";
-    private HashMap<String, String> apiHeaders = null;
+    private final String urlScheme;
+    private final String urlNetLocation;
+    private String urlPathPrefix;
+    private String apiScheme;
+    private String apiNetLocation;
+    private String apiPathPrefix;
+    private final HashMap<String, String> apiHeaders;
     private String username = null;
 
     public static class APIBuilder{
@@ -122,7 +123,7 @@ public class SzurubooruAPI {
         apiPathPrefix = stripTrailing(apiPathPrefix, "/");
 
         // Extract Auth Info
-        apiHeaders = new HashMap<String, String>();
+        apiHeaders = new HashMap<>();
         apiHeaders.put("Accept", "application/json");
 
         String apiUserInfo = parsedApiUri.getUserInfo();
@@ -195,20 +196,6 @@ public class SzurubooruAPI {
                 .stream()
                 .map((x) -> new BasicNameValuePair(x.getKey(), x.getValue()))
                 .toList(), "UTF-8");
-
-        /*boolean first = true;
-
-        for(String key:query.keySet()){
-            if(first){
-                url += '?';
-                first = false;
-            }
-            else url += '&';
-
-            url += key + ":" + query.get(key);
-        }
-
-        return url;*/
     }
 
     protected Map<String, Object> call(String method, List<String> urlParts) throws IOException, SzurubooruHTTPException {
@@ -267,8 +254,8 @@ public class SzurubooruAPI {
     protected String createDataUrl(String relativeUrl) throws URISyntaxException, MalformedURLException {
         return createDataUrl(relativeUrl, true);
     }
-    protected String createDataUrl(String relativeUrl, boolean ovverideBase) throws URISyntaxException, MalformedURLException {
-        if(ovverideBase){
+    protected String createDataUrl(String relativeUrl, boolean overrideBase) throws URISyntaxException, MalformedURLException {
+        if(overrideBase){
             String basePath = new File("/", urlPathPrefix).toString();
             String relativePath = new URI(relativeUrl).getPath();
 
@@ -363,7 +350,7 @@ public class SzurubooruAPI {
                 null,
                 Map.of("contentToken", image.getToken()));
 
-        List<SzurubooruSearchResult> ret = ((List<?>) result.get("similarPosts")).stream()
+        List<SzurubooruSearchResult> ret = new ArrayList<>(((List<?>) result.get("similarPosts")).stream()
                 .map(x -> {
                     Map<String, Object> searchResult = (Map<String, Object>) x;
                     return new SzurubooruSearchResult(
@@ -371,7 +358,7 @@ public class SzurubooruAPI {
                         (float)searchResult.get("distance"),
                         false);
                 })
-                .toList();
+                .toList());
 
         if(result.containsKey("exactPost")){
             ret.add(0, new SzurubooruSearchResult(
@@ -400,6 +387,6 @@ public class SzurubooruAPI {
     }
 
     public String toString(){
-        return "Szuurubooru API for " + this.username + " at " + this.apiNetLocation;
+        return "Szurubooru API for " + this.username + " at " + this.apiNetLocation;
     }
 }
