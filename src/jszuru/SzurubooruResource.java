@@ -4,6 +4,7 @@ import jszuru.exceptions.SzurubooruHTTPException;
 import jszuru.exceptions.SzurubooruResourceNotSynchronizedException;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,9 +52,9 @@ public abstract class SzurubooruResource {
                 String key = entry.getKey();
                 Object value = entry.getValue();
 
-                if(!newJson.containsKey(key)) return;
-                if(newJson.get(key).equals(json.get(key))) return;
-                if(newJson.get(key).equals(value)) return;
+                if(!newJson.containsKey(key)) continue;
+                if(newJson.get(key).equals(json.get(key))) continue;
+                if(newJson.get(key).equals(value)) continue;
 
                 throw new SzurubooruResourceNotSynchronizedException(key);
             }
@@ -142,10 +143,10 @@ public abstract class SzurubooruResource {
         throw new IllegalStateException(propertyName + " is not present in the JSON response");
     }
 
-    protected String fileGetter(String propertyName) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+    protected String fileGetter(String propertyName) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException, URISyntaxException {
         return fileGetter(propertyName, true);
     }
-    protected String fileGetter(String propertyName, boolean dynamicRefresh) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+    protected String fileGetter(String propertyName, boolean dynamicRefresh) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException, URISyntaxException {
         if(json.containsKey(propertyName + "Url")){
             return api.createDataUrl(json.get(propertyName + "Url").toString());
         }
