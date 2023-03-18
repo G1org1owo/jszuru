@@ -165,4 +165,10 @@ public abstract class SzurubooruResource {
     protected void fileSetter(String propertyName, FileToken propertyValue, boolean dynamicRefresh){
         newJson.put(propertyName + "Token", propertyValue.getToken());
     }
+
+    protected static List<String> getPrimaryNames(List<Map<String, Object>> list){
+        return list.stream()
+                .map(y -> ((List<String>)y.get("names")).get(0))
+                .toList();
+    }
 }

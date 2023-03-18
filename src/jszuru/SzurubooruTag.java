@@ -75,11 +75,11 @@ public class SzurubooruTag extends SzurubooruResource{
 
         if(ret.containsKey("implications")){
             List<Map<String, Object>> implications = (List<Map<String, Object>>) ret.get("implications");
-            ret.put("implications", implications.stream().map((x) -> ((String[])x.get("names"))[0]).toList());
+            ret.put("implications", getPrimaryNames(implications));
         }
         if(ret.containsKey("suggestions")){
             List<Map<String, Object>> suggestions = (List<Map<String, Object>>) ret.get("suggestions");
-            ret.put("suggestions", suggestions.stream().map((x) -> ((String[])x.get("names"))[0]).toList());
+            ret.put("suggestions", getPrimaryNames(suggestions));
         }
 
         return ret;
