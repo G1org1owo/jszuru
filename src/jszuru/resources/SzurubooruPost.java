@@ -1,5 +1,6 @@
-package jszuru;
+package jszuru.resources;
 
+import jszuru.SzurubooruAPI;
 import jszuru.exceptions.SzurubooruException;
 import jszuru.exceptions.SzurubooruHTTPException;
 import jszuru.exceptions.SzurubooruResourceNotSynchronizedException;
@@ -17,7 +18,7 @@ public class SzurubooruPost extends SzurubooruResource {
         super(api, initialJson);
     }
 
-    protected static boolean isValidSafety(String safety){
+    public static boolean isValidSafety(String safety){
         return safety.equalsIgnoreCase("safe") ||
             safety.equalsIgnoreCase("sketchy") ||
             safety.equalsIgnoreCase("unsafe");
@@ -29,16 +30,16 @@ public class SzurubooruPost extends SzurubooruResource {
     }
 
     @Override
-    protected List<String> getInstanceUrlParts() {
+    public List<String> getInstanceUrlParts() {
         return List.of("post", ((Double)json.get("id")).intValue() + "");
     }
     @Override
-    protected List<String> getClassUrlParts() {
+    public List<String> getClassUrlParts() {
         return List.of("posts");
     }
 
     @Override
-    protected List<String> lazyLoadComponents() {
+    public List<String> lazyLoadComponents() {
         return List.of("id", "safety", "type", "contentUrl", "flags", "tags", "relations");
     }
 

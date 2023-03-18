@@ -5,6 +5,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import jszuru.exceptions.SzurubooruHTTPException;
 import jszuru.exceptions.SzurubooruResourceNotSynchronizedException;
+import jszuru.resources.FileToken;
+import jszuru.resources.SzurubooruPost;
+import jszuru.resources.SzurubooruTag;
+import jszuru.search.SzurubooruSearch;
+import jszuru.search.SzurubooruSearchResult;
 import org.apache.http.*;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -198,10 +203,10 @@ public class SzurubooruAPI {
                 .toList(), "UTF-8");
     }
 
-    protected Map<String, Object> call(String method, List<String> urlParts) throws IOException, SzurubooruHTTPException {
+    public Map<String, Object> call(String method, List<String> urlParts) throws IOException, SzurubooruHTTPException {
         return call(method, urlParts, null, null);
     }
-    protected Map<String, Object> call(String method,
+    public Map<String, Object> call(String method,
                                        List<String> urlParts,
                                        Map<String, String> urlQuery,
                                        Map<String, Object> body) throws IOException, SzurubooruHTTPException {
@@ -251,10 +256,10 @@ public class SzurubooruAPI {
         }
     }
 
-    protected String createDataUrl(String relativeUrl) throws URISyntaxException, MalformedURLException {
+    public String createDataUrl(String relativeUrl) throws URISyntaxException, MalformedURLException {
         return createDataUrl(relativeUrl, true);
     }
-    protected String createDataUrl(String relativeUrl, boolean overrideBase) throws URISyntaxException, MalformedURLException {
+    public String createDataUrl(String relativeUrl, boolean overrideBase) throws URISyntaxException, MalformedURLException {
         if(overrideBase){
             String basePath = new File("/", urlPathPrefix).toString();
             String relativePath = new URI(relativeUrl).getPath();
@@ -298,11 +303,11 @@ public class SzurubooruAPI {
         }
 
         SzurubooruPost post = new SzurubooruPost(this, new HashMap<>());
-        post.newJson = Map.of(
+        post.setNewJson(Map.of(
                 "tags", new ArrayList<>(),
                 "safety", safety,
                 "contentToken", content.getToken()
-        );
+        ));
 
         post.push();
         return post;
@@ -311,7 +316,7 @@ public class SzurubooruAPI {
         return searchPost(searchQuery, 20, false);
     }
     public SzurubooruPost[] searchPost(String searchQuery, int pageSize, boolean eagerLoad) throws IOException, SzurubooruHTTPException {
-        return (SzurubooruPost[])SzurubooruSearch.searchGeneric(this, searchQuery, new SzurubooruPost(this, new HashMap<>()), pageSize, eagerLoad);
+        return (SzurubooruPost[]) SzurubooruSearch.searchGeneric(this, searchQuery, new SzurubooruPost(this, new HashMap<>()), pageSize, eagerLoad);
     }
 
     public SzurubooruTag getTag(String id) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
@@ -332,7 +337,7 @@ public class SzurubooruAPI {
         }
 
         SzurubooruTag tag = new SzurubooruTag(this, new HashMap<>());
-        tag.newJson = Map.of("names", List.of(name), "category", defaultCategory);
+        tag.setNewJson(Map.of("names", List.of(name), "category", defaultCategory));
 
         tag.push();
         return tag;

@@ -1,5 +1,6 @@
-package jszuru;
+package jszuru.resources;
 
+import jszuru.SzurubooruAPI;
 import jszuru.exceptions.SzurubooruException;
 import jszuru.exceptions.SzurubooruHTTPException;
 import jszuru.exceptions.SzurubooruResourceNotSynchronizedException;
@@ -11,7 +12,7 @@ import java.util.function.Function;
 @SuppressWarnings("unused")
 public class SzurubooruTag extends SzurubooruResource{
     @Override
-    protected List<String> getInstanceUrlParts() {
+    public List<String> getInstanceUrlParts() {
         List<String> urlParts = new ArrayList<>();
         urlParts.add("tag");
 
@@ -21,7 +22,7 @@ public class SzurubooruTag extends SzurubooruResource{
         return urlParts;
     }
     @Override
-    protected List<String> getClassUrlParts() {
+    public List<String> getClassUrlParts() {
         ArrayList<String> urlParts = new ArrayList<>();
         urlParts.add("tags");
 
@@ -29,7 +30,7 @@ public class SzurubooruTag extends SzurubooruResource{
     }
 
     @Override
-    protected List<String> lazyLoadComponents() {
+    public List<String> lazyLoadComponents() {
         ArrayList<String> components = new ArrayList<>();
         components.add("names");
         components.add("category");

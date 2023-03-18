@@ -1,5 +1,6 @@
-package jszuru;
+package jszuru.resources;
 
+import jszuru.SzurubooruAPI;
 import jszuru.exceptions.SzurubooruHTTPException;
 import jszuru.exceptions.SzurubooruResourceNotSynchronizedException;
 
@@ -22,10 +23,10 @@ public abstract class SzurubooruResource {
         this.newJson = new HashMap<>();
     }
 
-    protected abstract List<String> getInstanceUrlParts();
-    protected abstract List<String> getClassUrlParts();
+    public abstract List<String> getInstanceUrlParts();
+    public abstract List<String> getClassUrlParts();
 
-    protected abstract List<String> lazyLoadComponents();
+    public abstract List<String> lazyLoadComponents();
     protected abstract Map<String, Function<Object, Object>> getterTransforms();
     protected abstract Map<String, Function<Object, Object>> setterTransforms();
 
@@ -87,10 +88,6 @@ public abstract class SzurubooruResource {
         return !newJson.isEmpty();
     }
 
-    public SzurubooruAPI getApi(){
-        return api;
-    }
-
     public static Object applyTransforms(Map<String, Function<Object, Object>> transforms, String propertyName, Object propertyValue){
         if(propertyValue == null) return null;
         if(propertyValue instanceof List<?> list){
@@ -106,6 +103,7 @@ public abstract class SzurubooruResource {
     protected Object genericGetter(String propertyName) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
         return genericGetter(propertyName, true);
     }
+
     protected Object genericGetter(String propertyName, boolean dynamicRefresh) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
         if(newJson.containsKey(propertyName)){
             return applyTransforms(this.getterTransforms(), propertyName, newJson.get(propertyName));
@@ -120,10 +118,10 @@ public abstract class SzurubooruResource {
 
         throw new IllegalStateException(propertyName + " is not present in the JSON response");
     }
-
     protected void genericSetter(String propertyName, Object propertyValue) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
         genericSetter(propertyName, propertyValue, true);
     }
+
     protected void genericSetter(String propertyName, Object propertyValue, boolean dynamicRefresh) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
         if(json.containsKey(propertyName)){
             if(json.get(propertyName) instanceof List && !(propertyValue instanceof Iterable<?>)){
@@ -142,10 +140,10 @@ public abstract class SzurubooruResource {
 
         throw new IllegalStateException(propertyName + " is not present in the JSON response");
     }
-
     protected String fileGetter(String propertyName) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException, URISyntaxException {
         return fileGetter(propertyName, true);
     }
+
     protected String fileGetter(String propertyName, boolean dynamicRefresh) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException, URISyntaxException {
         if(json.containsKey(propertyName + "Url")){
             return api.createDataUrl(json.get(propertyName + "Url").toString());
@@ -158,17 +156,40 @@ public abstract class SzurubooruResource {
 
         throw new IllegalStateException(propertyName + " is not a URL resource in the JSON response");
     }
-
     protected void fileSetter(String propertyName, FileToken propertyValue){
         fileSetter(propertyName,propertyValue, true);
     }
+
     protected void fileSetter(String propertyName, FileToken propertyValue, boolean dynamicRefresh){
         newJson.put(propertyName + "Token", propertyValue.getToken());
     }
-
     protected static List<String> getPrimaryNames(List<Map<String, Object>> list){
         return list.stream()
                 .map(y -> ((List<String>)y.get("names")).get(0))
                 .toList();
+    }
+
+    public SzurubooruAPI getApi(){
+        return api;
+    }
+    public SzurubooruResource setApi(SzurubooruAPI api) {
+        this.api = api;
+        return this;
+    }
+
+    public Map<String, Object> getJson() {
+        return json;
+    }
+    public SzurubooruResource setJson(Map<String, Object> json) {
+        this.json = json;
+        return this;
+    }
+
+    public Map<String, Object> getNewJson() {
+        return newJson;
+    }
+    public SzurubooruResource setNewJson(Map<String, Object> newJson) {
+        this.newJson = newJson;
+        return this;
     }
 }

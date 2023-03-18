@@ -1,4 +1,6 @@
-package jszuru;
+package jszuru.search;
+
+import jszuru.resources.SzurubooruPost;
 
 @SuppressWarnings("unused")
 public class SzurubooruSearchResult {

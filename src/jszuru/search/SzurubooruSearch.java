@@ -1,6 +1,8 @@
-package jszuru;
+package jszuru.search;
 
+import jszuru.SzurubooruAPI;
 import jszuru.exceptions.SzurubooruHTTPException;
+import jszuru.resources.SzurubooruResource;
 
 import java.io.IOException;
 import java.util.ArrayList;

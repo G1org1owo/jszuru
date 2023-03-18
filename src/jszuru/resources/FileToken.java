@@ -1,11 +1,11 @@
-package jszuru;
+package jszuru.resources;
 
 @SuppressWarnings("unused")
 public class FileToken {
     private final String token;
     private final String filepath;
 
-    FileToken(String token, String filepath){
+    public FileToken(String token, String filepath){
         this.token = token;
         this.filepath = filepath;
     }

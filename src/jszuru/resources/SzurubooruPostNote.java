@@ -1,4 +1,4 @@
-package jszuru;
+package jszuru.resources;
 
 import java.util.List;
 import java.util.Map;
