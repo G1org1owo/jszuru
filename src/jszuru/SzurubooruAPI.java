@@ -299,6 +299,89 @@ public class SzurubooruAPI {
         }
         return str;
     }
+
+    public SzurubooruPost getPost(int id) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        SzurubooruPost post = new SzurubooruPost(this, Map.of("id", id));
+        post.pull();
+        return post;
+    }
+    public SzurubooruPost createPost(FileToken content, String safety) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        if(!SzurubooruPost.isValidSafety(safety)){
+            throw new IllegalArgumentException("Safety must be of value safe, sketchy or unsafe");
+        }
+
+        SzurubooruPost post = new SzurubooruPost(this, new HashMap<>());
+        post.newJson = Map.of(
+                "tags", new ArrayList<>(),
+                "safety", safety,
+                "contentToken", content.getToken()
+        );
+
+        post.push();
+        return post;
+    }
+    public SzurubooruPost[] searchPost(String searchQuery) throws IOException, SzurubooruHTTPException {
+        return searchPost(searchQuery, 20, false);
+    }
+    public SzurubooruPost[] searchPost(String searchQuery, int pageSize, boolean eagerLoad) throws IOException, SzurubooruHTTPException {
+        return (SzurubooruPost[])SzurubooruSearch.searchGeneric(this, searchQuery, new SzurubooruPost(this, new HashMap<>()), pageSize, eagerLoad);
+    }
+
+    public SzurubooruTag getTag(String id) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        SzurubooruTag tag = new SzurubooruTag(this, Map.of("names", List.of(id)));
+        tag.pull();
+        return tag;
+    }
+    public SzurubooruTag createTag(String name) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        String defaultCategory = "default";
+
+        if(this.call("GET", List.of("tag-categories")).get("results") instanceof List<?> results){
+            defaultCategory = results
+                    .stream()
+                    .filter((x) -> x instanceof Map<?, ?> map && ((boolean)map.get("default")))
+                    .map((x) -> (String)((Map<String, Object>) x).get("name"))
+                    .findFirst()
+                    .orElse("default");
+        }
+
+        SzurubooruTag tag = new SzurubooruTag(this, new HashMap<>());
+        tag.newJson = Map.of("names", List.of(name), "category", defaultCategory);
+
+        tag.push();
+        return tag;
+    }
+    public SzurubooruTag[] searchTag(String searchQuery) throws IOException, SzurubooruHTTPException {
+        return searchTag(searchQuery, 20, false);
+    }
+    public SzurubooruTag[] searchTag(String searchQuery, int pageSize, boolean eagerLoad) throws IOException, SzurubooruHTTPException {
+        return (SzurubooruTag[])SzurubooruSearch.searchGeneric(this, searchQuery, new SzurubooruTag(this, new HashMap<>()), pageSize, eagerLoad);
+    }
+
+    public List<SzurubooruSearchResult> searchByImage(FileToken image) throws IOException, SzurubooruHTTPException {
+        Map<String, Object> result = this.call("POST",
+                List.of("posts", "reverse-search"),
+                null,
+                Map.of("contentToken", image.getToken()));
+
+        List<SzurubooruSearchResult> ret = ((List<?>) result.get("similarPosts")).stream()
+                .map(x -> {
+                    Map<String, Object> searchResult = (Map<String, Object>) x;
+                    return new SzurubooruSearchResult(
+                        new SzurubooruPost(this, (Map<String, Object>) searchResult.get("post")),
+                        (float)searchResult.get("distance"),
+                        false);
+                })
+                .toList();
+
+        if(result.containsKey("exactPost")){
+            ret.add(0, new SzurubooruSearchResult(
+                    new SzurubooruPost(this, (Map<String, Object>) result.get("exactPost")),
+                    0.0f,
+                    true));
+        }
+
+        return ret;
+    }
     protected HttpRequest createHttpRequest(String method, String url) {
         if(method.equalsIgnoreCase("get")){
             return new HttpGet(url);
