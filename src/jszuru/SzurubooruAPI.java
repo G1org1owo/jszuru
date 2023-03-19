@@ -349,10 +349,24 @@ public class SzurubooruAPI {
         }
     }
 
-    public List<SzurubooruSearchResult> searchByImage(FileToken image) throws IOException, SzurubooruHTTPException {
+    public List<SzurubooruSearchResult> searchByImage(FileToken image)  throws IOException, SzurubooruHTTPException{
+        return searchByImage(image, false);
+    }
+    public List<SzurubooruSearchResult> searchByImage(FileToken image, boolean eagerLoad) throws IOException, SzurubooruHTTPException {
+        Map<String, String> urlQuery;
+
+        try {
+            urlQuery = Map.of("fields", String.join(",", SzurubooruPost.class
+                    .getDeclaredConstructor()
+                    .newInstance()
+                    .lazyLoadComponents()));
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            urlQuery = null;
+        }
+
         Map<String, Object> result = this.call("POST",
                 List.of("posts", "reverse-search"),
-                null,
+                eagerLoad? null : urlQuery,
                 Map.of("contentToken", image.getToken()));
 
         List<SzurubooruSearchResult> ret = new ArrayList<>(((List<?>) result.get("similarPosts")).stream()
