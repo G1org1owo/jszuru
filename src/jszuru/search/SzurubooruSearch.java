@@ -34,7 +34,8 @@ public class SzurubooruSearch {
         T defaultResource = resourceConstructor.newInstance(api, new HashMap<>());
 
         while(offset < total){
-            Map<String, String> urlQuery = new HashMap<>(Map.of("offset", offset + "", "limit", pageSize + "", "query", searchQuery));
+            Map<String, String> urlQuery = new HashMap<>(Map.of("offset", offset + "", "limit", pageSize + ""));
+            if(searchQuery != null) urlQuery.put("query", searchQuery);
 
             if(!eagerLoad){
                 urlQuery.put("fields", String.join(",", defaultResource.lazyLoadComponents()));
@@ -60,5 +61,24 @@ public class SzurubooruSearch {
         }
 
         return results;
+    }
+
+    public static <T extends SzurubooruResource> List<T> searchUnpaged(SzurubooruAPI api, Class<T> resourceClass) throws IOException, SzurubooruHTTPException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
+
+        Constructor<T> resourceConstructor = resourceClass.getDeclaredConstructor(SzurubooruAPI.class, Map.class);
+        T defaultResource = resourceConstructor.newInstance(api, new HashMap<>());
+
+        Map<String, Object> page = api.call("GET", defaultResource.getClassUrlParts(), null, null);
+
+        return ((List<Map<String, Object>>)page.get("results"))
+                .stream()
+                .map(x -> {
+                    try{
+                        return resourceConstructor.newInstance(api, x);
+                    } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                        return null;
+                    }
+                })
+                .toList();
     }
 }
