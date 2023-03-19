@@ -12,13 +12,13 @@ import java.util.Map;
 
 @SuppressWarnings("unused")
 public class SzurubooruSearch {
-    public static SzurubooruResource[] searchGeneric(SzurubooruAPI api,
+    public static List<SzurubooruResource> searchGeneric(SzurubooruAPI api,
                                                      String searchQuery,
                                                      SzurubooruResource transformingClass,
                                                      int pageSize) throws IOException, SzurubooruHTTPException {
         return searchGeneric(api, searchQuery, transformingClass, pageSize, false);
     }
-    public static SzurubooruResource[] searchGeneric(SzurubooruAPI api,
+    public static List<SzurubooruResource> searchGeneric(SzurubooruAPI api,
                                                      String searchQuery,
                                                      SzurubooruResource transformingClass,
                                                      int pageSize,
@@ -45,6 +45,6 @@ public class SzurubooruSearch {
             results.addAll((List<? extends SzurubooruResource>)page.get("results"));
         }
 
-        return results.toArray(new SzurubooruResource[0]);
+        return results;
     }
 }

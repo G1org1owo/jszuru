@@ -312,11 +312,14 @@ public class SzurubooruAPI {
         post.push();
         return post;
     }
-    public SzurubooruPost[] searchPost(String searchQuery) throws IOException, SzurubooruHTTPException {
+    public List<SzurubooruPost> searchPost(String searchQuery) throws IOException, SzurubooruHTTPException {
         return searchPost(searchQuery, 20, false);
     }
-    public SzurubooruPost[] searchPost(String searchQuery, int pageSize, boolean eagerLoad) throws IOException, SzurubooruHTTPException {
-        return (SzurubooruPost[]) SzurubooruSearch.searchGeneric(this, searchQuery, new SzurubooruPost(this, new HashMap<>()), pageSize, eagerLoad);
+    public List<SzurubooruPost> searchPost(String searchQuery, int pageSize, boolean eagerLoad) throws IOException, SzurubooruHTTPException {
+        return SzurubooruSearch.searchGeneric(this, searchQuery, new SzurubooruPost(this, new HashMap<>()), pageSize, eagerLoad)
+                .stream()
+                .map(x -> (SzurubooruPost) x)
+                .toList();
     }
 
     public SzurubooruTag getTag(String id) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
@@ -342,11 +345,14 @@ public class SzurubooruAPI {
         tag.push();
         return tag;
     }
-    public SzurubooruTag[] searchTag(String searchQuery) throws IOException, SzurubooruHTTPException {
+    public List<SzurubooruTag> searchTag(String searchQuery) throws IOException, SzurubooruHTTPException {
         return searchTag(searchQuery, 20, false);
     }
-    public SzurubooruTag[] searchTag(String searchQuery, int pageSize, boolean eagerLoad) throws IOException, SzurubooruHTTPException {
-        return (SzurubooruTag[])SzurubooruSearch.searchGeneric(this, searchQuery, new SzurubooruTag(this, new HashMap<>()), pageSize, eagerLoad);
+    public List<SzurubooruTag> searchTag(String searchQuery, int pageSize, boolean eagerLoad) throws IOException, SzurubooruHTTPException {
+        return SzurubooruSearch.searchGeneric(this, searchQuery, new SzurubooruTag(this, new HashMap<>()), pageSize, eagerLoad)
+                .stream()
+                .map(x -> (SzurubooruTag) x)
+                .toList();
     }
 
     public List<SzurubooruSearchResult> searchByImage(FileToken image) throws IOException, SzurubooruHTTPException {
