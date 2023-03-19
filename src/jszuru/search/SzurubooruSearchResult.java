@@ -5,10 +5,10 @@ import jszuru.resources.SzurubooruPost;
 @SuppressWarnings("unused")
 public class SzurubooruSearchResult {
     protected SzurubooruPost post;
-    protected float distance;
+    protected double distance;
     protected boolean exact;
 
-    public SzurubooruSearchResult(SzurubooruPost post, float distance, boolean exact){
+    public SzurubooruSearchResult(SzurubooruPost post, double distance, boolean exact){
         this.post = post;
         this.distance = distance;
         this.exact = exact;
@@ -17,7 +17,7 @@ public class SzurubooruSearchResult {
     public SzurubooruPost getPost() {
         return post;
     }
-    public float getDistance() {
+    public double getDistance() {
         return distance;
     }
     public boolean isExact() {
