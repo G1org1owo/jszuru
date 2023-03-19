@@ -314,6 +314,16 @@ public class SzurubooruAPI {
             return new ArrayList<>();
         }
     }
+    public void deletePost(int id) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        try{
+            this.getPost(id)
+                .delete();
+        } catch( SzurubooruHTTPException e){
+            if(!e.getErrorName().equals("PostNotFoundError")){
+                throw e;
+            }
+        }
+    }
 
     public SzurubooruTag getTag(String id) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
         SzurubooruTag tag = new SzurubooruTag(this, Map.of("names", List.of(id)));
@@ -346,6 +356,16 @@ public class SzurubooruAPI {
             return SzurubooruSearch.searchGeneric(this, searchQuery, SzurubooruTag.class, pageSize, eagerLoad);
         } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
             return new ArrayList<>();
+        }
+    }
+    public void deleteTag(String name) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        try{
+            this.getTag(name)
+                .delete();
+        } catch (SzurubooruHTTPException e){
+            if(!e.getErrorName().equals("TagNotFoundError")){
+                throw e;
+            }
         }
     }
 
@@ -406,7 +426,12 @@ public class SzurubooruAPI {
             return new HttpPut(url);
         }
         if(method.equalsIgnoreCase("delete")){
-            return new HttpDelete(url);
+            return new HttpPost(url){
+                @Override
+                public String getMethod() {
+                    return "DELETE";
+                }
+            };
         }
         if(method.equalsIgnoreCase("post")){
             return new HttpPost(url);

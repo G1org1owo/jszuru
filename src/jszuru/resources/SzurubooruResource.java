@@ -83,6 +83,15 @@ public abstract class SzurubooruResource {
 
         this.updateJson(data, true);
     }
+    public void delete() throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        if(json.containsKey("version") && json.get("version") != null){
+            Map<String, Object> data = api.call("DELETE", this.getInstanceUrlParts(), null, Map.of("version", json.get("version")));
+            this.updateJson(data, true);
+        }
+        else{
+            throw new SzurubooruResourceNotSynchronizedException("Missing version in resource " + this);
+        }
+    }
 
     public boolean isSynchronized(){
         return !newJson.isEmpty();
