@@ -283,15 +283,6 @@ public class SzurubooruAPI {
         return gson.fromJson(new FileReader(filename), SzurubooruAPI.class);
     }
 
-
-    protected static String stripTrailing(String str, String trailing){
-        if(str.equals(trailing)) return "";
-        if(str.endsWith(trailing)){
-            return str.substring(0, str.length()-trailing.length()-1);
-        }
-        return str;
-    }
-
     public SzurubooruPost getPost(int id) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
         SzurubooruPost post = new SzurubooruPost(this, Map.of("id", id));
         post.pull();
@@ -379,6 +370,14 @@ public class SzurubooruAPI {
         }
 
         return ret;
+    }
+
+    protected static String stripTrailing(String str, String trailing){
+        if(str.equals(trailing)) return "";
+        if(str.endsWith(trailing)){
+            return str.substring(0, str.length()-trailing.length()-1);
+        }
+        return str;
     }
     protected HttpRequest createHttpRequest(String method, String url) {
         if(method.equalsIgnoreCase("get")){
