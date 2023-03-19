@@ -112,7 +112,6 @@ public abstract class SzurubooruResource {
     protected Object genericGetter(String propertyName) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
         return genericGetter(propertyName, true);
     }
-
     protected Object genericGetter(String propertyName, boolean dynamicRefresh) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
         if(newJson.containsKey(propertyName)){
             return applyTransforms(this.getterTransforms(), propertyName, newJson.get(propertyName));
@@ -127,10 +126,10 @@ public abstract class SzurubooruResource {
 
         throw new IllegalStateException(propertyName + " is not present in the JSON response");
     }
+
     protected void genericSetter(String propertyName, Object propertyValue) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
         genericSetter(propertyName, propertyValue, true);
     }
-
     protected void genericSetter(String propertyName, Object propertyValue, boolean dynamicRefresh) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
         if(json.containsKey(propertyName)){
             if(json.get(propertyName) instanceof List && !(propertyValue instanceof Iterable<?>)){
@@ -149,10 +148,10 @@ public abstract class SzurubooruResource {
 
         throw new IllegalStateException(propertyName + " is not present in the JSON response");
     }
+
     protected String fileGetter(String propertyName) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException, URISyntaxException {
         return fileGetter(propertyName, true);
     }
-
     protected String fileGetter(String propertyName, boolean dynamicRefresh) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException, URISyntaxException {
         if(json.containsKey(propertyName + "Url")){
             return api.createDataUrl(json.get(propertyName + "Url").toString());
@@ -165,13 +164,14 @@ public abstract class SzurubooruResource {
 
         throw new IllegalStateException(propertyName + " is not a URL resource in the JSON response");
     }
+
     protected void fileSetter(String propertyName, FileToken propertyValue){
         fileSetter(propertyName,propertyValue, true);
     }
-
     protected void fileSetter(String propertyName, FileToken propertyValue, boolean dynamicRefresh){
         newJson.put(propertyName + "Token", propertyValue.getToken());
     }
+
     protected static List<String> getPrimaryNames(List<Map<String, Object>> list){
         return list.stream()
                 .map(y -> ((List<String>)y.get("names")).get(0))

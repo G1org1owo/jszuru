@@ -31,7 +31,15 @@ public class SzurubooruPost extends SzurubooruResource {
 
     @Override
     public List<String> getInstanceUrlParts() {
-        return List.of("post", ((Double)json.get("id")).intValue() + "");
+        Object id = json.get("id");
+        if(id instanceof Double idDouble){
+            id = idDouble.intValue();
+        }
+        else if(id instanceof Float idFloat){
+            id = idFloat.intValue();
+        }
+
+        return List.of("post", (int)id + "");
     }
     @Override
     public List<String> getClassUrlParts() {
