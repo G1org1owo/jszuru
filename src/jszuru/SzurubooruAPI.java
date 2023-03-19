@@ -214,7 +214,7 @@ public class SzurubooruAPI {
         Gson gson = new Gson();
 
         try(CloseableHttpClient httpClient = HttpClients.createDefault()){
-            HttpRequest httpRequest = createHttpRequest(method, createApiUrl(urlParts));
+            HttpRequest httpRequest = createHttpRequest(method, createApiUrl(urlParts, urlQuery));
             apiHeaders.forEach(httpRequest::setHeader);
             httpRequest.setHeader("Content", "application/json");
 
