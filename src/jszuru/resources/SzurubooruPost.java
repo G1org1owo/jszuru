@@ -79,7 +79,7 @@ public class SzurubooruPost extends SzurubooruResource {
 
         Function<List<Map<String, Object>>, List<Integer>> lambdaRelations = x ->
                 x.stream()
-                    .map(y -> (int)y.get("id"))
+                    .map(y -> ((Double)y.get("id")).intValue())
                     .toList();
 
         if(ret.containsKey("tags")){
