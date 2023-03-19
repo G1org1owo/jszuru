@@ -9,6 +9,7 @@ import jszuru.exceptions.SzurubooruResourceNotSynchronizedException;
 import jszuru.resources.FileToken;
 import jszuru.resources.SzurubooruPost;
 import jszuru.resources.SzurubooruTag;
+import jszuru.resources.SzurubooruTagCategory;
 import jszuru.search.SzurubooruSearch;
 import jszuru.search.SzurubooruSearchResult;
 import org.apache.http.*;
@@ -365,6 +366,47 @@ public class SzurubooruAPI {
                 .delete();
         } catch (SzurubooruHTTPException e){
             if(!e.getErrorName().equals("TagNotFoundError")){
+                throw e;
+            }
+        }
+    }
+
+    public SzurubooruTagCategory getCategory(String name) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        SzurubooruTagCategory tagCategory = new SzurubooruTagCategory(this, Map.of("name", name));
+        tagCategory.pull();
+        return tagCategory;
+    }
+    public SzurubooruTagCategory getDefaultCategory() throws IOException, SzurubooruHTTPException {
+        return this.listCategories()
+                .stream()
+                .filter(x -> x.isDefault())
+                .findFirst()
+                .orElse(new SzurubooruTagCategory(this, Map.of("name", "default")));
+    }
+    public SzurubooruTagCategory createCategory(String name) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        SzurubooruTagCategory tagCategory = new SzurubooruTagCategory(this, new HashMap<>());
+        tagCategory.setNewJson(Map.of("name", name, "color", "default", "order", 1));
+
+        tagCategory.push();
+        return tagCategory;
+    }
+    public List<SzurubooruTagCategory> listCategories() throws IOException, SzurubooruHTTPException {
+        try{
+            return SzurubooruSearch.searchUnpaged(this, SzurubooruTagCategory.class);
+        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+    public void setDefaultCategory(String name) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        this.getCategory(name)
+            .setDefault();
+    }
+    public void deleteCategory(String name) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        try{
+            this.getCategory(name)
+                .delete();
+        } catch (SzurubooruHTTPException e){
+            if(!e.getErrorName().equals("TagCategoryNotFoundError")){
                 throw e;
             }
         }
