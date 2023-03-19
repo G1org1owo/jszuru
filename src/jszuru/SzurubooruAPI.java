@@ -369,20 +369,22 @@ public class SzurubooruAPI {
                 eagerLoad? null : urlQuery,
                 Map.of("contentToken", image.getToken()));
 
-        List<SzurubooruSearchResult> ret = new ArrayList<>(((List<?>) result.get("similarPosts")).stream()
+        List<?> similarPosts = (List<?>) result.get("similarPosts");
+        List<SzurubooruSearchResult> ret = new ArrayList<>(similarPosts.stream()
+                .filter(x -> ((Double)((Map<String, Object>)x).get("distance")) != 0.0d)
                 .map(x -> {
                     Map<String, Object> searchResult = (Map<String, Object>) x;
                     return new SzurubooruSearchResult(
                         new SzurubooruPost(this, (Map<String, Object>) searchResult.get("post")),
-                        (float)searchResult.get("distance"),
+                        (Double)searchResult.get("distance"),
                         false);
                 })
                 .toList());
 
-        if(result.containsKey("exactPost")){
+        if(result.get("exactPost") != null){
             ret.add(0, new SzurubooruSearchResult(
                     new SzurubooruPost(this, (Map<String, Object>) result.get("exactPost")),
-                    0.0f,
+                    0.0d,
                     true));
         }
 
