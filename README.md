@@ -1,4 +1,4 @@
-# jszuru
+# jszuru ![](https://tokei.rs/b1/github/G1org1owo/jszuru)
 
 A pretty straight-forward java API for szurubooru-based image boards, mostly based on the python API by [sgsunder](https://github.com/sgsunder)
 
