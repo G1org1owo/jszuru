@@ -13,30 +13,16 @@ import java.util.function.Function;
 public class SzurubooruTag extends SzurubooruResource{
     @Override
     public List<String> getInstanceUrlParts() {
-        List<String> urlParts = new ArrayList<>();
-        urlParts.add("tag");
-
-        if(json.get("names") instanceof String[] names) urlParts.add(names[0]);
-        if(json.get("names") instanceof List<?> names) urlParts.add(String.valueOf(names.get(0)));
-
-        return urlParts;
+        return List.of("tag", this.getPrimaryName());
     }
     @Override
     public List<String> getClassUrlParts() {
-        ArrayList<String> urlParts = new ArrayList<>();
-        urlParts.add("tags");
-
-        return urlParts;
+        return List.of("tags");
     }
 
     @Override
     public List<String> lazyLoadComponents() {
-        ArrayList<String> components = new ArrayList<>();
-        components.add("names");
-        components.add("category");
-        components.add("usages");
-
-        return components;
+        return List.of("names", "category", "usages");
     }
 
     @Override
