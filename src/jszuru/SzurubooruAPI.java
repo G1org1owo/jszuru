@@ -3,6 +3,7 @@ package jszuru;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import jszuru.exceptions.SzurubooruException;
 import jszuru.exceptions.SzurubooruHTTPException;
 import jszuru.exceptions.SzurubooruResourceNotSynchronizedException;
 import jszuru.resources.FileToken;
@@ -84,14 +85,14 @@ public class SzurubooruAPI {
             String content = new String(response.getEntity().getContent().readAllBytes());
             Map<String, Object> responseMap = gson.fromJson(content, new TypeToken<Map<String, Object>>(){}.getType());
 
-            Object errorName = responseMap.get("name");
-            Object errorDescription = responseMap.get("description");
+            String errorName = (String) responseMap.get("name");
+            String errorDescription = (String) responseMap.get("description");
 
             if(errorName == null || errorDescription == null){
                 throw new SzurubooruHTTPException(content);
             }
 
-            throw new SzurubooruHTTPException(errorName + ": " + errorDescription);
+            throw new SzurubooruHTTPException(errorName, errorDescription);
         }
     }
 
