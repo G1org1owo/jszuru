@@ -21,6 +21,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.net.*;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -307,10 +308,11 @@ public class SzurubooruAPI {
         return searchPost(searchQuery, 20, false);
     }
     public List<SzurubooruPost> searchPost(String searchQuery, int pageSize, boolean eagerLoad) throws IOException, SzurubooruHTTPException {
-        return SzurubooruSearch.searchGeneric(this, searchQuery, new SzurubooruPost(this, new HashMap<>()), pageSize, eagerLoad)
-                .stream()
-                .map(x -> (SzurubooruPost) x)
-                .toList();
+        try{
+            return SzurubooruSearch.searchGeneric(this, searchQuery, SzurubooruPost.class, pageSize, eagerLoad);
+        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+            return new ArrayList<>();
+        }
     }
 
     public SzurubooruTag getTag(String id) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
@@ -340,10 +342,11 @@ public class SzurubooruAPI {
         return searchTag(searchQuery, 20, false);
     }
     public List<SzurubooruTag> searchTag(String searchQuery, int pageSize, boolean eagerLoad) throws IOException, SzurubooruHTTPException {
-        return SzurubooruSearch.searchGeneric(this, searchQuery, new SzurubooruTag(this, new HashMap<>()), pageSize, eagerLoad)
-                .stream()
-                .map(x -> (SzurubooruTag) x)
-                .toList();
+        try{
+            return SzurubooruSearch.searchGeneric(this, searchQuery, SzurubooruTag.class, pageSize, eagerLoad);
+        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+            return new ArrayList<>();
+        }
     }
 
     public List<SzurubooruSearchResult> searchByImage(FileToken image) throws IOException, SzurubooruHTTPException {
