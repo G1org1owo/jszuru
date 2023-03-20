@@ -56,20 +56,27 @@ public class SzurubooruPost extends SzurubooruResource {
         Function<Object, Object> lambdaTags = (x) -> new SzurubooruTag(api, (Map<String, Object>) x);
         Function<Object, Object> lambdaRelations = (x) -> new SzurubooruPost(api, (Map<String, Object>) x);
 
-        return Map.of("tags", lambdaTags, "relations", lambdaRelations);
+        return Map.of("tags", lambdaTags,
+                      "relations", lambdaRelations);
     }
     @Override
     protected Map<String, Function<Object, Object>> setterTransforms() {
         Function<Object, Object> lambdaTags = (x) -> {
             SzurubooruTag tag = (SzurubooruTag) x;
-            return Map.of("names", ((SzurubooruTag) x).getNames(), "category", tag.getCategory());
+            return Map.of(
+                    "names", tag.getNames(),
+                    "category", tag.getCategory()
+            );
         };
         Function<Object, Object> lambdaRelations = (x) -> {
             SzurubooruPost post = (SzurubooruPost) x;
             return Map.of("id", post.getId());
         };
 
-        return Map.of("tags", lambdaTags, "relations", lambdaRelations);
+        return Map.of(
+                "tags", lambdaTags,
+                "relations", lambdaRelations
+        );
     }
 
     @Override
@@ -85,11 +92,6 @@ public class SzurubooruPost extends SzurubooruResource {
                 "notes"
         ));
 
-        Function<List<Map<String, Object>>, List<Integer>> lambdaRelations = x ->
-                x.stream()
-                    .map(y -> ((Double)y.get("id")).intValue())
-                    .toList();
-
         if(ret.containsKey("tags")){
             List<Map<String, Object>> tags = (List<Map<String, Object>>) ret.get("tags");
             ret.put("tags", getPrimaryNames(tags));
@@ -97,7 +99,7 @@ public class SzurubooruPost extends SzurubooruResource {
 
         if(ret.containsKey("relations")){
             List<Map<String, Object>> relations = (List<Map<String, Object>>) ret.get("relations");
-            ret.put("relations", lambdaRelations.apply(relations));
+            ret.put("relations", getPostIds(relations));
         }
 
         return ret;

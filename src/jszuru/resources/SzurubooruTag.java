@@ -78,11 +78,12 @@ public class SzurubooruTag extends SzurubooruResource{
             throw new SzurubooruResourceNotSynchronizedException("This tag is not synchronized");
         }
 
-        Map<String, Object> body = new HashMap<>();
-        body.put("removeVersion", source.json.get("version"));
-        body.put("remove", source.getPrimaryName());
-        body.put("mergeToVersion", json.get("version"));
-        body.put("mergeTo", this.getPrimaryName());
+        Map<String, Object> body = Map.of(
+                "removeVersion", source.json.get("version"),
+                "remove", source.getPrimaryName(),
+                "mergeToVersion", json.get("version"),
+                "mergeTo", this.getPrimaryName()
+        );
 
         Map<String, Object> data = api.call("POST", List.of("tag-merge"), null, body);
         this.updateJson(data, true);
