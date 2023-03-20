@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class SzurubooruTagCategory extends SzurubooruResource {
+public class SzurubooruTagCategory extends SzurubooruCategoryResource {
     public SzurubooruTagCategory(SzurubooruAPI api, Map<String, Object> initialJson){
         super(api, initialJson);
     }
@@ -116,15 +116,8 @@ public class SzurubooruTagCategory extends SzurubooruResource {
             return false;
         }
     }
-
     public SzurubooruTagCategory setDefault() throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
-        List<String> urlParts = new ArrayList<>(this.getInstanceUrlParts());
-        urlParts.add("default");
-
-        Map<String, Object> data = api.call("PUT", urlParts, null, null);
-        this.updateJson(data, true);
-
-        return this;
+        return (SzurubooruTagCategory) super.setDefault();
     }
 
     public String toString(){
