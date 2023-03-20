@@ -70,22 +70,31 @@ public abstract class SzurubooruResource {
         this.updateJson(data);
     }
     public void push() throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        this.pushGeneric(SzurubooruResource::getInstanceUrlParts,
+                         SzurubooruResource::getClassUrlParts);
+    }
+    public void delete() throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        deleteGeneric(SzurubooruResource::getInstanceUrlParts);
+    }
+
+    protected void pushGeneric(Function<SzurubooruResource, List<String>> putUrlParts,
+                               Function<SzurubooruResource, List<String>> postUrlParts) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
         Map<String, Object> body = this.serialized();
         Map<String, Object> data;
 
         if(json.containsKey("version") && json.get("version") != null){
             body.put("version", json.get("version"));
-            data = api.call("PUT", this.getInstanceUrlParts(), null, body);
+            data = api.call("PUT", putUrlParts.apply(this), null, body);
         }
         else{
-            data = api.call("POST", getClassUrlParts(), null, body);
+            data = api.call("POST", postUrlParts.apply(this), null, body);
         }
 
         this.updateJson(data, true);
     }
-    public void delete() throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+    protected void deleteGeneric(Function<SzurubooruResource, List<String>> deleteUrlParts) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
         if(json.containsKey("version") && json.get("version") != null){
-            Map<String, Object> data = api.call("DELETE", this.getInstanceUrlParts(), null, Map.of("version", json.get("version")));
+            Map<String, Object> data = api.call("DELETE", deleteUrlParts.apply(this), null, Map.of("version", json.get("version")));
             this.updateJson(data, true);
         }
         else{
