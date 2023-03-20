@@ -186,6 +186,11 @@ public abstract class SzurubooruResource {
                 .map(y -> ((List<String>)y.get("names")).get(0))
                 .toList();
     }
+    protected static List<Integer> getPostIds(List<Map<String, Object>> list){
+        return list.stream()
+                .map(y -> getIntValue(y.get("id")))
+                .toList();
+    }
 
     public SzurubooruAPI getApi(){
         return api;
@@ -209,5 +214,13 @@ public abstract class SzurubooruResource {
     public SzurubooruResource setNewJson(Map<String, Object> newJson) {
         this.newJson = newJson;
         return this;
+    }
+
+    public static int getIntValue(Object n){
+        if(n instanceof Double d) return d.intValue();
+        if(n instanceof Float f) return f.intValue();
+        if(n instanceof String s) return Integer.parseInt(s);
+
+        return (int) n;
     }
 }
