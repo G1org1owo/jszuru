@@ -19,7 +19,10 @@ public class SzurubooruTagCategory extends SzurubooruCategoryResource {
 
     @Override
     public List<String> getInstanceUrlParts() {
-        return List.of("tag-category", (String)json.get("name"));
+        Object name = json.get("name");
+        if(name == null) name = newJson.get("name");
+
+        return List.of("tag-category", (String) name);
     }
     @Override
     public List<String> getClassUrlParts() {
