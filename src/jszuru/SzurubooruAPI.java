@@ -412,6 +412,85 @@ public class SzurubooruAPI {
         }
     }
 
+    public SzurubooruPoolCategory getPoolCategory(String name) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        SzurubooruPoolCategory poolCategory = new SzurubooruPoolCategory(this, Map.of("name", name));
+        poolCategory.pull();
+        return poolCategory;
+    }
+    public SzurubooruPoolCategory getDefaultPoolCategory() throws IOException, SzurubooruHTTPException {
+        return this.listPoolCategories()
+                .stream()
+                .filter(x -> x.isDefault())
+                .findFirst()
+                .orElse(new SzurubooruPoolCategory(this, Map.of("name", "default")));
+    }
+    public SzurubooruPoolCategory createPoolCategory(String name) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        SzurubooruPoolCategory poolCategory = new SzurubooruPoolCategory(this, new HashMap<>());
+        poolCategory.setNewJson(Map.of("name", name, "color", "default"));
+
+        poolCategory.push();
+        return poolCategory;
+    }
+    public List<SzurubooruPoolCategory> listPoolCategories() throws IOException, SzurubooruHTTPException {
+        try{
+            return SzurubooruSearch.searchUnpaged(this, SzurubooruPoolCategory.class);
+        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+    public void setDefaultPoolCategory(String name) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        this.getPoolCategory(name)
+                .setDefault();
+    }
+    public void deletePoolCategory(String name) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        try{
+            this.getPoolCategory(name)
+                    .delete();
+        } catch (SzurubooruHTTPException e){
+            if(!e.getErrorName().equals("PoolCategoryNotFoundError")){
+                throw e;
+            }
+        }
+    }
+
+    public SzurubooruPool getPool(int id) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        SzurubooruPool pool = new SzurubooruPool(this, Map.of("id", id));
+        pool.pull();
+
+        return pool;
+    }
+    public SzurubooruPool createPool(String name) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        SzurubooruPool pool = new SzurubooruPool(this, new HashMap<>());
+        pool.setNewJson(Map.of(
+                "names", List.of(name),
+                "category", this.getDefaultPoolCategory().getName()
+        ));
+
+        pool.push();
+        return pool;
+    }
+    public List<SzurubooruPool> searchPool(String searchQuery) throws IOException, SzurubooruHTTPException {
+        return searchPool(searchQuery, 20, false);
+    }
+    public List<SzurubooruPool> searchPool(String searchQuery, int pageSize, boolean eagerLoad) throws IOException, SzurubooruHTTPException {
+        try{
+            return SzurubooruSearch.searchGeneric(this, searchQuery, SzurubooruPool.class, pageSize, eagerLoad);
+        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public SzurubooruPool mergePools(int source, int target) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        return mergePools(source, target, false);
+    }
+    public SzurubooruPool mergePools(int source, int target, boolean addAsAlias) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        SzurubooruPool sourcePool = this.getPool(source);
+        SzurubooruPool targetPool = this.getPool(target);
+
+        sourcePool.mergeFrom(targetPool, addAsAlias);
+
+        return sourcePool;
+    }
+
     public List<SzurubooruSearchResult> searchByImage(FileToken image)  throws IOException, SzurubooruHTTPException{
         return searchByImage(image, false);
     }
