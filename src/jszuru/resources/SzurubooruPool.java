@@ -101,7 +101,10 @@ public class SzurubooruPool extends SzurubooruResource {
                     .stream()
                     .distinct()
                     .toList());
+            this.push();
         }
+
+        source.json = new HashMap<>();
     }
 
     public int getId(){

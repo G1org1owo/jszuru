@@ -473,9 +473,9 @@ public class SzurubooruAPI {
         SzurubooruPool sourcePool = this.getPool(source);
         SzurubooruPool targetPool = this.getPool(target);
 
-        sourcePool.mergeFrom(targetPool, addAsAlias);
+        targetPool.mergeFrom(sourcePool, addAsAlias);
 
-        return sourcePool;
+        return targetPool;
     }
 
     public List<SzurubooruSearchResult> searchByImage(FileToken image)  throws IOException, SzurubooruHTTPException{

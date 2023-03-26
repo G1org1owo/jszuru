@@ -95,6 +95,7 @@ public class SzurubooruTag extends SzurubooruResource{
                 .stream()
                 .distinct()
                 .toList());
+            this.push();
         }
 
         source.json = new HashMap<>();
