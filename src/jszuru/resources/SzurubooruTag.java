@@ -100,6 +100,21 @@ public class SzurubooruTag extends SzurubooruResource{
 
         source.json = new HashMap<>();
     }
+    public List<SzurubooruTag> getSiblings() throws IOException, SzurubooruHTTPException {
+        Map<String, Object> data = api.call("GET", List.of("tag-siblings", this.getPrimaryName()));
+
+        if(data.get("results") instanceof List<?> results){
+            return results
+                    .stream()
+                    .map(x -> {
+                        Map<String, Object> result = (Map<String, Object>) x;
+                        return new SzurubooruTag(api, (Map<String, Object>) result.get("tag"));
+                    })
+                    .toList();
+        }
+
+        return new ArrayList<>();
+    }
 
     public SzurubooruTag(SzurubooruAPI api, Map<String, Object> initialJson){
         super(api, initialJson);

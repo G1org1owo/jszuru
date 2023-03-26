@@ -357,6 +357,21 @@ public class SzurubooruAPI {
             }
         }
     }
+    public SzurubooruTag mergeTags(String source, String target) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        return mergeTags(source, target, false);
+    }
+    public SzurubooruTag mergeTags(String source, String target, boolean addAsAlias) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        SzurubooruTag sourceTag = this.getTag(source);
+        SzurubooruTag targetTag = this.getTag(target);
+
+        targetTag.mergeFrom(sourceTag, addAsAlias);
+
+        return targetTag;
+    }
+    public List<SzurubooruTag> listTagSiblings(String name) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        SzurubooruTag tag = getTag(name);
+        return tag.getSiblings();
+    }
 
     public SzurubooruTagCategory getTagCategory(String name) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
         SzurubooruTagCategory tagCategory = new SzurubooruTagCategory(this, Map.of("name", name));
