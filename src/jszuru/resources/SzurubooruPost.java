@@ -8,6 +8,7 @@ import jszuru.exceptions.SzurubooruResourceNotSynchronizedException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -103,6 +104,42 @@ public class SzurubooruPost extends SzurubooruResource {
         }
 
         return ret;
+    }
+
+    public void mergeFrom(SzurubooruPost source, boolean replaceContent) throws SzurubooruResourceNotSynchronizedException, IOException, SzurubooruHTTPException {
+        if(!source.json.containsKey("version") || !source.newJson.isEmpty()){
+            throw new SzurubooruResourceNotSynchronizedException("Target post is not synchronized");
+        }
+        if(!json.containsKey("version") || !newJson.isEmpty()){
+            throw new SzurubooruResourceNotSynchronizedException("This post is not synchronized");
+        }
+
+        Map<String, Object> body = Map.of(
+                "removeVersion", source.json.get("version"),
+                "remove", source.getId(),
+                "mergeToVersion", json.get("version"),
+                "mergeTo", this.getId(),
+                "replaceContent", replaceContent
+        );
+
+        Map<String, Object> data = api.call("POST", List.of("post-merge"), null, body);
+        this.updateJson(data, true);
+
+        source.json = new HashMap<>();
+    }
+    public List<SzurubooruPost> getAround() throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        List<String> urlParts = new ArrayList<>(this.getInstanceUrlParts());
+        urlParts.add("around");
+
+        Map<String, Object> data = api.call("GET", urlParts);
+
+        SzurubooruPost prev = new SzurubooruPost(api, (Map<String, Object>) data.get("prev"));
+        SzurubooruPost next = new SzurubooruPost(api, (Map<String, Object>) data.get("next"));
+
+        prev.pull();
+        next.pull();
+
+        return List.of(prev, next);
     }
 
     public int getId(){

@@ -322,6 +322,20 @@ public class SzurubooruAPI {
             }
         }
     }
+    public List<SzurubooruPost> getAroundPost(int id) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        return this.getPost(id).getAround();
+    }
+    public SzurubooruPost mergePosts(int source, int target) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        return mergePosts(source, target, false);
+    }
+    public SzurubooruPost mergePosts(int source, int target, boolean replaceContent) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
+        SzurubooruPost sourcePost = this.getPost(source);
+        SzurubooruPost targetPost = this.getPost(target);
+
+        targetPost.mergeFrom(sourcePost, replaceContent);
+
+        return targetPost;
+    }
 
     public SzurubooruTag getTag(String id) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
         SzurubooruTag tag = new SzurubooruTag(this, Map.of("names", List.of(id)));
