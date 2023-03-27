@@ -278,6 +278,28 @@ public class SzurubooruPost extends SzurubooruResource {
         return this;
     }
 
+    public SzurubooruPost setRating(int rating) throws IOException, SzurubooruHTTPException {
+        List<String> urlParts = new ArrayList<>(this.getInstanceUrlParts());
+        urlParts.add("score");
+
+        if(rating > 0) rating = 1;
+        else if(rating < 0) rating = -1;
+
+        api.call("POST", urlParts, null, Map.of("score", rating));
+
+        return this;
+    }
+    public SzurubooruPost setFavorite(boolean favorite) throws IOException, SzurubooruHTTPException {
+        List<String> urlParts = new ArrayList<>(this.getInstanceUrlParts());
+        urlParts.add("favorite");
+
+        String method = favorite? "POST" : "DELETE";
+
+        api.call(method, urlParts);
+
+        return this;
+    }
+
     public String getType(){
         try{
             return (String) this.genericGetter("type");

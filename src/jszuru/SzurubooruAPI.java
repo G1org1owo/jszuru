@@ -336,6 +336,14 @@ public class SzurubooruAPI {
 
         return targetPost;
     }
+    public SzurubooruPost getFeaturedPost() throws IOException, SzurubooruHTTPException {
+        Map<String, Object> data = this.call("GET", List.of("featured-post"));
+
+        return new SzurubooruPost(this, data);
+    }
+    public void setFeaturedPost(int id) throws IOException, SzurubooruHTTPException {
+        this.call("POST", List.of("featured-post"), null, Map.of("id", id));
+    }
 
     public SzurubooruTag getTag(String id) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
         SzurubooruTag tag = new SzurubooruTag(this, Map.of("names", List.of(id)));
