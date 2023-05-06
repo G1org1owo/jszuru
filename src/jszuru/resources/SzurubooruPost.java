@@ -18,12 +18,6 @@ public class SzurubooruPost extends SzurubooruResource {
     public SzurubooruPost(SzurubooruAPI api, Map<String, Object> initialJson){
         super(api, initialJson);
     }
-
-    public static boolean isValidSafety(String safety){
-        return safety.equalsIgnoreCase("safe") ||
-            safety.equalsIgnoreCase("sketchy") ||
-            safety.equalsIgnoreCase("unsafe");
-    }
     protected SzurubooruTag stringToTag(String value) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
         SzurubooruTag tag = new SzurubooruTag(api, Map.of("names", List.of(value)));
         tag.pull(); // Might cause some trouble when converting the name of a tag that is yet to be created
@@ -160,17 +154,17 @@ public class SzurubooruPost extends SzurubooruResource {
         return this;
     }
 
-    public String getSafety(){
+    public PostSafety getSafety(){
         try{
-            return (String) this.genericGetter("safety");
+            return PostSafety.getEnum((String) this.genericGetter("safety"));
         } catch (IOException | SzurubooruException e) {
             e.printStackTrace();
             return null;
         }
     }
-    public SzurubooruPost setSafety(String safety){
+    public SzurubooruPost setSafety(PostSafety safety){
         try{
-            this.genericSetter("safety", safety);
+            this.genericSetter("safety", safety.toString());
         } catch (IOException | SzurubooruException e) {
             e.printStackTrace();
         }

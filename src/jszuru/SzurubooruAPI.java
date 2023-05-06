@@ -287,15 +287,11 @@ public class SzurubooruAPI {
         post.pull();
         return post;
     }
-    public SzurubooruPost createPost(FileToken content, String safety) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
-        if(!SzurubooruPost.isValidSafety(safety)){
-            throw new IllegalArgumentException("Safety must be of value safe, sketchy or unsafe");
-        }
-
+    public SzurubooruPost createPost(FileToken content, PostSafety safety) throws IOException, SzurubooruHTTPException, SzurubooruResourceNotSynchronizedException {
         SzurubooruPost post = new SzurubooruPost(this, new HashMap<>());
         post.setNewJson(Map.of(
                 "tags", new ArrayList<>(),
-                "safety", safety,
+                "safety", safety.toString(),
                 "contentToken", content.getToken()
         ));
 
