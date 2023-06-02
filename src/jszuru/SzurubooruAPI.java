@@ -263,7 +263,9 @@ public class SzurubooruAPI {
             String basePath = new File("/", urlPathPrefix).toString();
             String relativePath = new URI(relativeUrl).getPath();
 
-            return urlScheme + "://" + urlNetLocation + new File(basePath, relativePath);
+            String dataUrl = urlScheme + "://" + urlNetLocation + new File(basePath, relativePath);
+            return dataUrl.replaceAll("\\\\", "/"); //Ugh, windows
+
         }
 
         return new URL(new URL(urlScheme + "://" + urlNetLocation + urlPathPrefix), relativeUrl).toString();
