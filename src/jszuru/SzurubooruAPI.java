@@ -36,7 +36,7 @@ public class SzurubooruAPI {
     private String username = null;
 
     public static class APIBuilder{
-        private String baseUrl;
+        private String baseUrl = null;
         private String username = null;
         private String password = null;
         private String token = null;
@@ -66,6 +66,8 @@ public class SzurubooruAPI {
         }
 
         public SzurubooruAPI build() throws MalformedURLException, URISyntaxException{
+            if(baseUrl == null) throw new IllegalStateException("Base url was not set. Please set one with SzurubooruAPI.Builder.setBaseUrl()");
+
             return new SzurubooruAPI(baseUrl, username, password, token, apiUri);
         }
     }
