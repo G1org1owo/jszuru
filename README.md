@@ -65,7 +65,7 @@ SzurubooruTag tag = mybooru.createTag("absurdres");
 // Before creating a new post you must upload the file and get the token.
 // You can do so by using either a java.io.File or a java.lang.String.
 FileToken fileToken = mybooru.uploadFile("mikumybeloved.jpeg");
-SzurubooruPost post = mybooru.createPost(fileToken, "safe");
+SzurubooruPost post = mybooru.createPost(fileToken, PostSafety.SAFE);
 ```
 
 If at any given point you felt the urge to retrieve any modification another user might have applied to your beloved tags, or if you decided to remove a tag from a post, you could do it through the various accessors and the methods `SzurubooruResource.push()` and `SzurubooruResource.pull()`
