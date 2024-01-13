@@ -21,6 +21,7 @@ import org.apache.http.message.BasicNameValuePair;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -219,7 +220,7 @@ public class SzurubooruAPI {
             httpRequest.setHeader("Content", "application/json");
 
             if(body!=null && httpRequest instanceof HttpEntityEnclosingRequest sendRequest){
-                sendRequest.setEntity(new StringEntity(gson.toJson(body)));
+                sendRequest.setEntity(new StringEntity(gson.toJson(body), ContentType.APPLICATION_JSON));
             }
 
             HttpResponse response = httpClient.execute((HttpUriRequest) httpRequest);
