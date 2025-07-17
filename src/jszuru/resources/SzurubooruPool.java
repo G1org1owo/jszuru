@@ -33,7 +33,7 @@ public class SzurubooruPool extends SzurubooruResource {
 
     @Override
     protected Map<String, Function<Object, Object>> getterTransforms() {
-        Function<Object, Object> lambda = x -> new SzurubooruPool(api, ((Map<String, Object>) x));
+        Function<Object, Object> lambda = x -> new SzurubooruPost(api, ((Map<String, Object>) x));
 
         return Map.of("posts", lambda);
     }
